@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Hello — MachMaker App</title>
+
+  <!-- Simple styles: centered "app" card and subtle animations -->
+  <style>
+    :root{
+      --bg: #0f172a;
+      --card: #0b1220;
+      --accent: #7dd3fc;
+      --muted: #9aa4b2;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: radial-gradient(1200px 600px at 10% 10%, rgba(125,211,252,0.06), transparent),
+                  linear-gradient(180deg, #081025 0%, #05121a 100%);
+      color: #e6eef6;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .app {
+      width: min(880px, 94vw);
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border: 1px solid rgba(255,255,255,0.04);
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: 0 10px 30px rgba(2,6,23,0.7);
+      display:grid;
+      grid-template-columns: 1fr 320px;
+      gap: 20px;
+      align-items:center;
+    }
+
+    .hero {
+      padding-right: 10px;
+    }
+
+    h1{
+      font-size: clamp(28px, 4.6vw, 42px);
+      margin:0 0 8px 0;
+      letter-spacing: -0.6px;
+    }
+    p.lead{
+      margin: 0 0 18px 0;
+      color: var(--muted);
+    }
+
+    .preview {
+      background: linear-gradient(180deg, rgba(10,15,30,0.6), rgba(4,8,15,0.6));
+      border-radius: 10px;
+      padding: 18px;
+      text-align:center;
+      border: 1px solid rgba(255,255,255,0.03);
+    }
+
+    .big {
+      font-size: clamp(36px, 8vw, 72px);
+      margin: 12px 0;
+      font-weight:700;
+      letter-spacing: -1px;
+    }
+
+    button {
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid rgba(125,211,252,0.16);
+      padding: 10px 14px;
+      border-radius: 10px;
+      cursor:pointer;
+      font-weight:600;
+      transition: transform .12s ease, box-shadow .12s ease;
+    }
+    button:hover{ transform: translateY(-3px); box-shadow: 0 6px 20px rgba(125,211,252,0.06) }
+
+    .right {
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      justify-content:center;
+      align-items:stretch;
+    }
+
+    .meta {
+      font-size:13px;
+      color:var(--muted);
+      line-height:1.45;
+      background: rgba(255,255,255,0.01);
+      padding:12px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,0.02);
+    }
+
+    footer {
+      grid-column: 1 / -1;
+      text-align:center;
+      font-size:13px;
+      color:var(--muted);
+      margin-top:6px;
+    }
+
+    /* Responsive */
+    @media (max-width:720px){
+      .app { grid-template-columns: 1fr; padding:18px }
+      .right { order: -1 }
+    }
+  </style>
+</head>
+<body>
+  <main class="app" role="main" aria-labelledby="app-title">
+    <section class="hero">
+      <h1 id="app-title">Hello, MachMaker 👋</h1>
+      <p class="lead">A tiny starter app — semantic, responsive, and ready to expand. Click the button to change the message.</p>
+
+      <div class="preview" aria-live="polite">
+        <div id="hello" class="big">Hello, world!</div>
+        <div>
+          <button id="toggleBtn" aria-controls="hello">Change greeting</button>
+        </div>
+      </div>
+    </section>
+
+    <aside class="right" aria-label="App information">
+      <div class="meta">
+        <strong>How to use</strong>
+        <ul>
+          <li>Save this file as <code>index.html</code>.</li>
+          <li>Double-click it (or run <code>open index.html</code>) to open in your browser.</li>
+          <li>To serve it from a local web server: <code>python3 -m http.server 8000</code> then visit <code>http://localhost:8000</code>.</li>
+        </ul>
+      </div>
+
+      <div class="meta">
+        <strong>Developer notes</strong>
+        <p>Accessible headings and ARIA live region are included so screen readers announce changes when the greeting updates.</p>
+      </div>
+    </aside>
+
+    <footer>Made for your MachMaker — feel free to customize fonts, colors, and behavior.</footer>
+  </main>
+
+  <!-- Tiny JS: toggles greetings and demonstrates interactivity -->
+  <script>
+    (function(){
+      const btn = document.getElementById('toggleBtn');
+      const hello = document.getElementById('hello');
+      const messages = [
+        "Hello, world!",
+        "Welcome to MachMaker!",
+        "Build something awesome ✨",
+        "HTML + CSS + JS — go!"
+      ];
+      let i = 0;
+
+      btn.addEventListener('click', () => {
+        i = (i + 1) % messages.length;
+        hello.textContent = messages[i];
+      });
+
+      // Keyboard accessibility: Enter or Space when focused on button already handled by browser
+    })();
+  </script>
+</body>
+</html>
