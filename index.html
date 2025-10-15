@@ -1,11 +1,197 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Matchmaker</title>
+  <style>
+    body {
+      background-color: pink;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+    }
+
+    select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      margin-bottom: 20px;
+    }
+
+    .error {
+      color: red;
+    }
+
+    ul {
+      padding-left: 20px;
+    }
+
+    /* 🎈 Falling Hearts Animation */
+    .hearts-container {
+      position: fixed;
+      pointer-events: none;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: 9999;
+    }
+
+    .heart {
+      position: absolute;
+      color: red;
+      font-size: 24px;
+      animation: fall linear infinite;
+      opacity: 0.8;
+    }
+
+    @keyframes fall {
+      0% {
+        transform: translateY(-100px) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+  </style>
 </head>
 <body>
-  <h1>MatchMaker 2.0 — 🌹💖 Where Souls Whisper and Hearts Answer 🌹💖</h1>
+  <!-- 💖 Falling Hearts Container -->
+  <div class="hearts-container" id="hearts-container"></div>
+
+  <h1>MatchMaker 2.0</h1>
+  <h2>🌹💖 Where Souls Whisper and Hearts Answer 💖🌹</h2>
+
+  <p>
+    This program figures out if you and I are meant to be. <br>
+    You'll answer 5 questions. Rate each on a scale from 1 to 5:
+    <ul>
+      <li>5 - Strongly Agree</li>
+      <li>4 - Agree</li>
+      <li>3 - Neutral</li>
+      <li>2 - Disagree</li>
+      <li>1 - Strongly Disagree</li>
+    </ul>
+  </p>
+
+  <div id="questions"></div>
+
+  <button onclick="calculateCompatibility()">💓 Analyze My Heartbeat 💓</button>
+
+  <div id="results" style="margin-top: 30px;"></div>
+
+  <script>
+    const questions = [
+      { id: "q1", text: "Artizia is better than Zara" },
+      { id: "q2", text: "Raising Canes is worse than Chick-fil-A" },
+      { id: "q3", text: "Chicago is the best city" },
+      { id: "q4", text: "Hondas are better than Toyotas" },
+      { id: "q5", text: "Sephora is the best makeup store" },
+    ];
+
+    // Render questions dynamically
+    const questionsContainer = document.getElementById("questions");
+    questions.forEach(q => {
+      questionsContainer.innerHTML += `
+        <label for="${q.id}">${q.text}</label><br/>
+        <select id="${q.id}">
+          <option value="">-- Select an option --</option>
+          <option value="5">Strongly Agree</option>
+          <option value="4">Agree</option>
+          <option value="3">Neither agree nor disagree</option>
+          <option value="2">Disagree</option>
+          <option value="1">Strongly Disagree</option>
+        </select><br/>
+      `;
+    });
+
+    function calculateCompatibility() {
+      const maxScorePerQuestion = 5;
+      const totalQuestions = questions.length;
+      const maxTotalScore = maxScorePerQuestion * totalQuestions;
+
+      let totalScore = 0;
+      let breakdownHTML = "<h3>🧾 Question Breakdown:</h3><ul>";
+      let errorMessages = [];
+
+      const resultsDiv = document.getElementById("results");
+      resultsDiv.innerHTML = "";
+
+      questions.forEach((q, index) => {
+        const select = document.getElementById(q.id);
+        const value = select.value;
+
+        if (!value) {
+          errorMessages.push(`❗ You must answer Question ${index + 1}: "${q.text}"`);
+        } else {
+          const score = parseInt(value);
+          totalScore += score;
+          breakdownHTML += `<li><strong>Q${index + 1}</strong>: ${q.text} — <strong>${score}/5</strong></li>`;
+        }
+      });
+
+      breakdownHTML += "</ul>";
+
+      if (errorMessages.length > 0) {
+        resultsDiv.innerHTML = `
+          <h3 class="error">Please answer all questions:</h3>
+          <ul class="error">${errorMessages.map(msg => `<li>${msg}</li>`).join("")}</ul>
+        `;
+        return;
+      }
+
+      const percentage = (totalScore / maxTotalScore) * 100;
+      let closingRemark = "";
+
+      if (percentage >= 88) {
+        closingRemark = "💘 We're soulmates. The stars agree. 💘";
+      } else if (percentage >= 68) {
+        closingRemark = "💞 We’d make a pretty cute couple! 💞";
+      } else if (percentage >= 48) {
+        closingRemark = "😅 Could be friends… maybe. 😅";
+      } else {
+        closingRemark = "💔 Sorry, we’re just too different. 💔";
+      }
+
+      resultsDiv.innerHTML = `
+        ${breakdownHTML}
+        <h3>💯 Overall Compatibility</h3>
+        <p>Total Score: <strong>${totalScore}/${maxTotalScore}</strong></p>
+        <p>Compatibility Percentage: <strong>${percentage.toFixed(2)}%</strong></p>
+        <p style="font-size: 1.3em;">${closingRemark}</p>
+      `;
+    }
+
+    // ❤️ Falling hearts animation logic
+    function createHeart() {
+      const heart = document.createElement("div");
+      heart.className = "heart";
+      heart.innerText = "💖"; // You can change to "❤️", "💕", etc.
+
+      const size = Math.random() * 20 + 10; // 10px to 30px
+      heart.style.fontSize = `${size}px`;
+
+      heart.style.left = `${Math.random() * 100}%`;
+      heart.style.animationDuration = `${Math.random() * 3 + 3}s`; // 3 to 6 seconds
+
+      document.getElementById("hearts-container").appendChild(heart);
+
+      // Remove heart after animation
+      setTimeout(() => {
+        heart.remove();
+      }, 7000);
+    }
+
+    // Start generating hearts continuously
+    setInterval(createHeart, 300);
+  </script>
 </body>
 </html>
