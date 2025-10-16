@@ -1,5 +1,5 @@
 # Matchmaker 2.0 
 
 ## Credits:
-ChatGPT for title
+ChatGPT 
 Eric Pogue 
